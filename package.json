@@ -7,6 +7,9 @@
     "lint": "eslint **.js",
     "prettier": "prettier utils.js src/* --write"
   },
+  "publishConfig": {
+   "@sumibot:registry": "https://npm.pkg.github.com"
+ }
   "repository": {
     "type": "git",
     "url": "git:https://github.com/nguyenkhanh-k2/sumibot-fca-unofficial.git"
