@@ -1,6 +1,6 @@
 {
   "name": "@sumibot/fca-unofficial",
-  "version": "1.0.6",
+  "version": "1.0.0",
   "description": "Facebook chat API that doesn't rely on XMPP.  Will NOT be deprecated April 30th 2015.",
   "scripts": {
     "test": "mocha",
