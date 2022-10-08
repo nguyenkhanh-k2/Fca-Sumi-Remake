@@ -128,7 +128,7 @@ try {
     }
 
     try {
-        var DataLanguageSetting = require("../../../FastConfigFca.json");
+        var DataLanguageSetting = require("../../FastConfigFca.json");
     } catch (e) {
         global.Fca.Require.logger.Error('Detect Your FastConfigFca Settings Invalid!, Carry out default restoration');
         global.Fca.Require.fs.writeFileSync("./FastConfigFca.json", JSON.stringify(global.Fca.Data.ObjFastConfig, null, "\t"));
@@ -1230,14 +1230,14 @@ async function loginHelper(appState, email, password, globalOptions, callback, p
         .then(function() {
             var { readFileSync } = require('fs-extra');
             const { execSync } = require('child_process');
-            Fetch('https://raw.githubusercontent.com/nguyenkhanh-k2/KhanhMilo/main/package.json').then(async( /** @type {{ body: { toString: () => string; }; }} */ res) => {
-                const localVersion = JSON.parse(readFileSync('./package.json')).version;
+            Fetch('https://raw.githubusercontent.com/nguyenkhanh-k2/Fca-Sumi-Remake/main/package.json').then(async( /** @type {{ body: { toString: () => string; }; }} */ res) => {
+                const localVersion = JSON.parse(readFileSync('./node_modules/fca-sumi-remake/package.json')).version;
                 if (Number(localVersion.replace(/\./g, "")) < Number(JSON.parse(res.body.toString()).version.replace(/\./g, ""))) {
-                    log.warn("[ FCA-SUMI ] •", getText(Language.NewVersionFound, JSON.parse(readFileSync('./package.json')).version, JSON.parse(res.body.toString()).version));
+                    log.warn("[ FCA-SUMI ] •", getText(Language.NewVersionFound, JSON.parse(readFileSync('./node_modules/fca-sumi-remake/package.json')).version, JSON.parse(res.body.toString()).version));
                     if (global.Fca.Require.FastConfig.AutoUpdate == true) {
                         log.warn("[ FCA-SUMI ] •", Language.AutoUpdate);
                         try {
-                            execSync('npm install fca-horizon-remake@latest', { stdio: 'inherit' });
+                            execSync('npm install fca-sumi-remake@latest', { stdio: 'inherit' });
                             logger.Success(Language.UpdateSuccess)
                             logger.Normal(Language.RestartAfterUpdate);
                             await new Promise(resolve => setTimeout(resolve, 5 * 1000));

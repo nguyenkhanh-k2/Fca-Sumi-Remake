@@ -1647,7 +1647,7 @@ function getAppState(jar, Encode) {
         languageFile = require('./Language/index.json');
     var Language = languageFile.find(i => i.Language == global.Fca.Require.FastConfig.Language).Folder.Index;
     var data;
-    switch (require("../../../FastConfigFca.json").EncryptFeature) {
+    switch (require("../../FastConfigFca.json").EncryptFeature) {
         case true:
             {
                 if (Encode == undefined) Encode = true;
@@ -1669,7 +1669,7 @@ function getAppState(jar, Encode) {
             break;
         default:
             {
-                logger.Normal(getText(Language.IsNotABoolean, require("../../../FastConfigFca.json").EncryptFeature));
+                logger.Normal(getText(Language.IsNotABoolean, require("../../FastConfigFca.json").EncryptFeature));
                 data = appstate;
             }
     }

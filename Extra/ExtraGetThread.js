@@ -5,7 +5,7 @@ var { lastRun, capture } = require('./Src/Last-Run');
 var logger = require("../logger");
 var getText = global.Fca.getText;
 var language = require("../Language/index.json");
-language = language.find(i => i.Language == require("../../../../FastConfigFca.json").Language).Folder.ExtraGetThread;
+language = language.find(i => i.Language == require("../../../FastConfigFca.json").Language).Folder.ExtraGetThread;
 
 exports.createData = function(threadID, threadData) {
     try {
