@@ -22,7 +22,7 @@
         "aes-js": "latest",
         "assert": "latest",
         "bluebird": "latest",
-        "chalk": "4.1.2",
+        "chalk": "5.1.0",
         "cheerio": "latest",
         "crypto": "latest",
         "crypto-js": "latest",
