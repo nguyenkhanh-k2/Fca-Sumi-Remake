@@ -19,6 +19,7 @@ module.exports = function (defaultFuncs, api, ctx) {
         .then(utils.parseAndCheckLogin(ctx, defaultFuncs))
         .then(function (resData) {
           if (resData.error) throw resData;
+
           return resData.payload.metadata[0];
         })
     );

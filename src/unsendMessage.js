@@ -34,6 +34,7 @@ module.exports = function (defaultFuncs, api, ctx) {
         log.error("unsendMessage", err);
         return callback(err);
       });
+
     return returnPromise;
   };
 };

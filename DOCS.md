@@ -9,6 +9,7 @@
 * [`api.changeNickname`](#changeNickname)
 * [`api.changeThreadColor`](#changeThreadColor)
 * [`api.changeThreadEmoji`](#changeThreadEmoji)
+* [`api.createNewGroup`](#createNewGroup)
 * [`api.createPoll`](#createPoll)
 * [`api.deleteMessage`](#deleteMessage)
 * [`api.deleteThread`](#deleteThread)
@@ -24,12 +25,12 @@
 * [`api.getUserID`](#getUserID)
 * [`api.getUserInfo`](#getUserInfo)
 * [`api.handleMessageRequest`](#handleMessageRequest)
-* [`api.listen`](#listen)
 * [`api.listenMqtt`](#listenMqtt)
 * [`api.logout`](#logout)
 * [`api.markAsDelivered`](#markAsDelivered)
 * [`api.markAsRead`](#markAsRead)
 * [`api.markAsReadAll`](#markAsReadAll)
+* [`api.markAsSeen`](#markAsSeen)
 * [`api.muteThread`](#muteThread)
 * [`api.removeUserFromGroup`](#removeUserFromGroup)
 * [`api.resolvePhotoUrl`](#resolvePhotoUrl)
@@ -74,15 +75,25 @@ nodejs login.js
 ---------------------------------------
 
 <a name="login"></a>
-### login(credentials[, options], callback)
+### login(credentials[, options][, callback])
 
 This function is returned by `require(...)` and is the main entry point to the API.
 
 It allows the user to log into facebook given the right credentials.
 
-If it succeeds, `callback` will be called with a `null` object (for potential errors) and with an object containing all the available functions.
+Return a Promise that will resolve if logged in successfully, or reject if failed to login. (will not resolve or reject if callback is supplied!)
 
-If it fails, `callback` will be called with an error object.
+If `callback` is supplied:
+
+* `callback` will be called with a `null` object (for potential errors) and with an object containing all the available functions if logged in successfully.
+
+* `callback` will be called with an error object if failed to login.
+
+If `login-approval` error was thrown: Inside error object is `continue` function, you can call that function with 2FA code. The behaviour of this function depends on how you call `login` with:
+
+* If `callback` is not supplied (using `Promise`), this function will return a `Promise` that behaves like `Promise` received from `login`.
+
+* If `callback` is supplied, this function will still return a `Promise`, but it will not resolve. Instead, the result is called to `callback`.
 
 __Arguments__
 
@@ -93,7 +104,7 @@ __Arguments__
 __Example (Email & Password)__
 
 ```js
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
 login({email: "FB_EMAIL", password: "FB_PASSWORD"}, (err, api) => {
     if(err) return console.error(err);
@@ -105,7 +116,7 @@ __Example (Email & Password then save appState to file)__
 
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
 login({email: "FB_EMAIL", password: "FB_PASSWORD"}, (err, api) => {
     if(err) return console.error(err);
@@ -118,7 +129,7 @@ __Example (AppState loaded from file)__
 
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -132,7 +143,7 @@ __Example__:
 
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 const readline = require("readline");
 
 var rl = readline.createInterface({
@@ -180,7 +191,7 @@ __Arguments__
 ---------------------------------------
 
 <a name="changeAdminStatus"></a>
-### api.changeAdminStatus(threadID, adminIDs, adminStatus[, callback])
+### api.changeAdminStatus(threadID, adminIDs, adminStatus)
 
 Given a adminID, or an array of adminIDs, will set the admin status of the user(s) to `adminStatus`.
 
@@ -188,29 +199,24 @@ __Arguments__
 * `threadID`: ID of a group chat (can't use in one-to-one conversations)
 * `adminIDs`: The id(s) of users you wish to admin/unadmin (string or an array).
 * `adminStatus`: Boolean indicating whether the user(s) should be promoted to admin (`true`) or demoted to a regular user (`false`).
-* `callback(err)`: A callback called when the query is done (either with an error or null).
 
 __Example__
 
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
-login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
+login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, async function(err, api) {
     if (err) return console.error(err);
 
     let threadID = "0000000000000000";
     let newAdmins = ["111111111111111", "222222222222222"];
-    api.changeAdminStatus(threadID, newAdmins, true, editAdminsCallback);
+    await api.changeAdminStatus(threadID, newAdmins, true);
 
     let adminToRemove = "333333333333333";
-    api.changeAdminStatus(threadID, adminToRemove, false, editAdminsCallback);
+    await api.changeAdminStatus(threadID, adminToRemove, false);
 
 });
-
-function editAdminsCallback(err) {
-    if (err) return console.error(err);
-}
 
 ```
 
@@ -230,7 +236,7 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -270,7 +276,7 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -298,7 +304,7 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -320,7 +326,7 @@ to empty string if you want the default.
 Note: the color needs to start with a "#".
 
 __Arguments__
-* `color`: String representing a hex color code (eg: "#0000ff") preceded by "#".
+* `color`: String representing a theme ID (a list of theme ID can be found at `api.threadColors`).
 * `threadID`: String representing the ID of the thread.
 * `callback(err)`: A callback called when the change is done (either with an error or null).
 
@@ -328,7 +334,7 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -357,7 +363,7 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -370,8 +376,20 @@ login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, ap
 
 ---------------------------------------
 
+<a name="createNewGroup"></a>
+### api.createNewGroup(participantIDs[, groupTitle][, callback])
+
+Create a new group chat.
+
+__Arguments__
+* `participantIDs`: An array containing participant IDs. (*Length must be >= 2*)
+* `groupTitle`: The title of the new group chat.
+* `callback(err, threadID)`: A callback called when created.
+
+---------------------------------------
+
 <a name="createPoll"></a>
-### api.createPoll(title, threadID[, options][, callback])
+### api.createPoll(title, threadID[, options][, callback]) (*temporary deprecated because Facebook is updating this feature*)
 
 Creates a poll with the specified title and optional poll options, which can also be initially selected by the logged-in user.
 
@@ -385,7 +403,7 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -413,12 +431,12 @@ __Arguments__
 __Example__
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
 
-    api.listenMqtt((err, message) => {
+    api.listen((err, message) => {
         if(message.body) {
             api.sendMessage(message.body, message.threadID, (err, messageInfo) => {
                 if(err) return console.error(err);
@@ -446,7 +464,7 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -503,7 +521,7 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -533,7 +551,7 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -596,18 +614,19 @@ Takes a threadID and a callback.  Works for both single-user and group threads.
 
 __Arguments__
 * `threadID`: A threadID corresponding to the target thread.
-* `callback(err, info)`: If `err` is `null`, `info` will contain the following properties: * `callback(err, arr)`: A callback called when the query is done (either with an error or with an confirmation object). `arr` is an array of thread object containing the following properties:
+* `callback(err, info)`: If `err` is `null`, `info` will contain the following properties:
 
 | Key   |      Description      |
 |----------|:-------------:|
 | threadID | ID of the thread |
 | participantIDs |    Array of user IDs in the thread   |
-| name | Name of the thread. Usually the name of the user. In group chats, this will be empty if the name of the group chat is unset. |
+| threadName | Name of the thread. Usually the name of the user. In group chats, this will be empty if the name of the group chat is unset. |
+| userInfo | An array contains info of members, which has the same structure as [`getUserInfo`](#getUserInfo), but add a key `id`, contain ID of member currently at. |
 | nicknames |    Map of nicknames for members of the thread. If there are no nicknames set, this will be null.   |
 | unreadCount | Number of unread messages |
 | messageCount | Number of messages |
 | imageSrc | URL to the group chat photo. Null if unset or a 1-1 thread. |
-| timestamp |  |
+| timestamp | Timestamp of last activity |
 | muteUntil | Timestamp at which the thread will no longer be muted. The timestamp will be -1 if the thread is muted indefinitely or null if the thread is not muted. |
 | isGroup | boolean, true if this thread is a group thread (more than 2 participants). |
 | isSubscribed |  |
@@ -618,6 +637,8 @@ __Arguments__
 | emoji | Object with key 'emoji' whose value is the emoji unicode character. Null if unset. |
 | color | String form of the custom color in hexadecimal form. |
 | adminIDs | Array of user IDs of the admins of the thread. Empty array if unset. |
+| approvalMode | `true` or `false`, used to check if this group requires admin approval to add users |
+| approvalQueue | Array of object that has the following keys: <ul><li>`inviterID`: ID of the user invited the person to the group</li><li>`requesterID`: ID of the person waiting to be approved</li><li>`timestamp`: Request timestamp</li></ul> |
 
 ---------------------------------------
 
@@ -674,6 +695,7 @@ __Thread list__
 | lastMessageTimestamp | timestamp in milliseconds                                   |
 | lastReadTimestamp    | timestamp in milliseconds or `null`                         |
 | cannotReplyReason    | `null`, `"RECIPIENTS_NOT_LOADABLE"` or `"BLOCKED"`          |
+| approvalMode         | `true` or `false`, used to check if this group requires admin approval to add users |
 
 __`participants` format__
 
@@ -896,7 +918,7 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -928,7 +950,7 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -950,23 +972,25 @@ login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, ap
 <a name="threadColors"></a>
 ### api.threadColors
 
-A dictionary mapping names of all currently valid thread colors to their hexadecimal values that are accepted by [`api.changeThreadColor`](#changeThreadColor). These colors, listed below, are the ones present in the palette UI used for selecting thread colors on the Messenger client.
+A dictionary mapping names of all currently valid thread themes to their theme ID that are accepted by [`api.changeThreadColor`](#changeThreadColor). These themes, listed below, are the ones present in the palette UI used for selecting thread themes on the Messenger client.
 
-- MessengerBlue: `null`
-- Viking: `#44bec7`
-- GoldenPoppy: `#ffc300`
-- RadicalRed: `#fa3c4c`
-- Shocking: `#d696bb`
-- PictonBlue: `#6699cc`
-- FreeSpeechGreen: `#13cf13`
-- Pumpkin: `#ff7e29`
-- LightCoral: `#e68585`
-- MediumSlateBlue: `#7646ff`
-- DeepSkyBlue: `#20cef5`
-- Fern: `#67b868`
-- Cameo: `#d4a88c`
-- BrilliantRose: `#ff5ca1`
-- BilobaFlower: `#a695c7`
+- DefaultBlue: `196241301102133`
+- HotPink: `169463077092846`
+- AquaBlue: `2442142322678320`
+- BrightPurple: `234137870477637`
+- CoralPink: `980963458735625`
+- Orange: `175615189761153`
+- Green: `2136751179887052`
+- LavenderPurple: `2058653964378557`
+- Red: `2129984390566328`
+- Yellow: `174636906462322`
+- TealBlue: `1928399724138152`
+- Aqua: `417639218648241`
+- Mango: `930060997172551`
+- Berry: `164535220883264`
+- Citrus: `370940413392601`
+- Candy: `205488546921017`
+- ~~StarWars: `809305022860427`~~ (Facebook removed it.)
 
 ---------------------------------------
 
@@ -984,10 +1008,14 @@ __Arguments__
 ---------------------------------------
 
 <a name="listen"></a>
-### api.listen(callback)
+### api.listen([callback])
+<a name="listenMqtt"></a>
+### api.listenMqtt([callback])
 
 Will call `callback` when a new message is received on this account.
-By default this won't receive events (joining/leaving a chat, title change etc...) but it can be activated with `api.setOptions({listenEvents: true})`.  This will by default ignore messages sent by the current account, you can enable listening to your own messages with `api.setOptions({selfListen: true})`. This returns `stopListening` that will stop the `listen` loop and is guaranteed to prevent any future calls to the callback given to `listen`. An immediate call to `stopListening` when an error occurs will prevent the listen function to continue.
+By default this won't receive events (joining/leaving a chat, title change etc...) but it can be activated with `api.setOptions({listenEvents: true})`.  This will by default ignore messages sent by the current account, you can enable listening to your own messages with `api.setOptions({selfListen: true})`. This returns an `EventEmitter` that contains function `stopListening` that will stop the `listen` loop and is guaranteed to prevent any future calls to the callback given to `listen`. An immediate call to `stopListening` when an error occurs will prevent the listen function to continue.
+
+If `callback` is not defined, or isn't a `Function`, you can listen to messages with event `message` and `error` from `EventEmitter` returned by this function.
 
 __Arguments__
 
@@ -1005,7 +1033,7 @@ The message object will contain different fields based on its type (as determine
 		<th>Description</th>
 	</tr>
 	<tr>
-		<td rowspan="9">
+		<td rowspan="10">
 			<code>"message"</code><br />
 			A message was sent to a thread.
 		</td>
@@ -1041,13 +1069,17 @@ The message object will contain different fields based on its type (as determine
 		<td>Boolean representing whether or not the message was read.</td>
 	</tr>
 	<tr>
+		<td><code>participantIDs</code></td>
+		<td>An array containing participant IDs.</td>
+	</tr>	
+	<tr>
 		<td><code>type</code></td>
 		<td>For this event type, this will always be the string <code>"message"</code>.</td>
-	</tr>
+	</tr>	
 	<tr>
-		<td rowspan="6">
+		<td rowspan="7">
 			<code>"event"</code><br />
-			An event occurred within a thread.
+			An event occurred within a thread. Note that receiving this event type needs to be enabled with `api.setOptions({ listenEvents: true })`
 		</td>
 		<td><code>author</code></td>
 		<td>The person who performed the event.</td>
@@ -1062,12 +1094,16 @@ The message object will contain different fields based on its type (as determine
 	</tr>
 	<tr>
 		<td><code>logMessageType</code></td>
-		<td>String representing the type of event (<code>log:subscribe</code>, <code>log:unsubscribe</code>, <code>log:thread-name</code>, <code>log:thread-color</code>, <code>log:thread-icon</code>, <code>log:user-nickname</code>)</td>
+		<td>String representing the type of event (<code>log:subscribe</code>, <code>log:unsubscribe</code>, <code>log:thread-name</code>, <code>log:thread-color</code>, <code>log:thread-icon</code>, <code>log:user-nickname</code>, <code>log:thread-call</code>, <code>log:thread-admins</code>)</td>
 	</tr>
 	<tr>
 		<td><code>threadID</code></td>
 		<td>The threadID representing the thread in which the message was sent.</td>
 	</tr>
+	<tr>
+		<td><code>participantIDs</code></td>
+		<td>An array containing participant IDs.</td>
+	</tr>	
 	<tr>
 		<td><code>type</code></td>
 		<td>For this event type, this will always be the string <code>"event"</code>.</td>
@@ -1075,7 +1111,7 @@ The message object will contain different fields based on its type (as determine
 	<tr>
 		<td rowspan="5">
 			<code>"typ"</code><br />
-			A user in a thread is typing.
+			A user in a thread is typing. Note that receiving this event type needs to be enabled with `api.setOptions({ listenTyping: true })`
 		</td>
 		<td><code>from</code></td>
 		<td>ID of the user who started/stopped typing.</td>
@@ -1213,7 +1249,7 @@ The message object will contain different fields based on its type (as determine
 		<td>For this event type, this will always be the string <code>"message_unsend"</code>.</td>
 	</tr>
 	<tr>
-		<td rowspan="10">
+		<td rowspan="11">
 			<code>"message_reply"</code><br />
 			A reply message was sent to a thread.
 		</td>
@@ -1253,6 +1289,10 @@ The message object will contain different fields based on its type (as determine
 		<td>For this event type, this will always be the string <code>"message_reply"</code>.</td>
 	</tr>
 	<tr>
+		<td><code>participantIDs</code></td>
+		<td>An array containing participant IDs.</td>
+	</tr>	
+	<tr>
 		<td><code>messageReply</code></td>
 		<td>An object represent a message being replied. Content inside is the same like a normal <code>"message"</code> event.</td>
 	</tr>
@@ -1270,13 +1310,14 @@ Similar to how messages can vary based on their `type`, so too can the `attachme
 | `"animated_image"` | `ID`, `filename`, `previewUrl`, `previewWidth`, `previewHeight`, `url`, `width`, `height` |
 | `"video"` | `ID`, `filename`, `previewUrl`, `previewWidth`, `previewHeight`, `url`, `width`, `height`, `duration`, `videoType` |
 | `"audio"` | `ID`, `filename`, `audioType`, `duration`, `url`, `isVoiceMail` |
+| `"location"` | `ID`, `latitude`, `longitude`, `image`, `width`, `height`, `url`, `address` |
 | `"share"` | `ID`, `url`, `title`, `description`, `source`, `image`, `width`, `height`, `playable`, `duration`, `playableUrl`, `subattachments`, `properties` |
 
 __Example__
 
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
 // Simple echo bot. He'll repeat anything that you say.
 // Will stop when you say '/stop'
@@ -1286,14 +1327,14 @@ login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, ap
 
     api.setOptions({listenEvents: true});
 
-    var stopListening = api.listenMqtt((err, event) => {
+    var listenEmitter = api.listen((err, event) => {
         if(err) return console.error(err);
 
-        switch(event.type) {
+        switch (event.type) {
             case "message":
                 if(event.body === '/stop') {
                     api.sendMessage("Goodbye...", event.threadID);
-                    return stopListening();
+                    return listenEmitter.stopListening();
                 }
                 api.markAsRead(event.threadID, (err) => {
                     if(err) console.log(err);
@@ -1307,22 +1348,6 @@ login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, ap
     });
 });
 ```
-
----------------------------------------
-
-<a name="listenMqtt"></a>
-### api.listenMqtt(callback) (Experimental)
-Same as [`api.listen`](#listen) but uses MQTT to recieve data.
-
-Will call `callback` when a new message is received on this account.
-By default this won't receive events (joining/leaving a chat, title change etc...) but it can be activated with `api.setOptions({listenEvents: true})`.  This will by default ignore messages sent by the current account, you can enable listening to your own messages with `api.setOptions({selfListen: true})`. This returns `stopListening` that will stop the `listen` loop and is guaranteed to prevent any future calls to the callback given to `listenMqtt`. An immediate call to `stopListening` when an error occurs will prevent the listen function to continue.
-
-
-__Arguments__
-
-- `callback(error, message)`: A callback called every time the logged-in account receives a new message.
-
-Messages and Events are the same as [`api.listen`](#listen)
 
 ---------------------------------------
 
@@ -1354,12 +1379,12 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("facebook-chat-api");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
 
-    api.listenMqtt((err, message) => {
+    api.listen((err, message) => {
         if(err) return console.error(err);
 
         // Marks messages as delivered immediately after they're received
@@ -1373,9 +1398,9 @@ login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, ap
 <a name="markAsRead"></a>
 ### api.markAsRead(threadID, [read[, callback]])
 
-Given a threadID will mark all the unread messages as read. Facebook will take a couple of seconds to show that you've read the messages.
+Given a threadID will mark all the unread messages in a thread as read. Facebook will take a couple of seconds to show that you've read the messages.
 
-You can also mark new messages as read automatically. See [api.setOptions](#setOptions).
+You can also mark new messages as read automatically. See [api.setOptions](#setOptions). But be careful, this will make your account getting banned, especially when receiving *HUGE* amount of messages.
 
 __Arguments__
 
@@ -1387,12 +1412,12 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
 
-    api.listenMqtt((err, message) => {
+    api.listen((err, message) => {
         if(err) return console.error(err);
 
         // Marks messages as read immediately after they're received
@@ -1404,9 +1429,16 @@ login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, ap
 ---------------------------------------
 
 <a name="markAsReadAll"></a>
-### api.markAsReadAll([callback]])
+### api.markAsReadAll([callback])
 
 This function will mark all of messages in your inbox readed.
+
+---------------------------------------
+
+<a name="markAsSeen"></a>
+### api.markAsSeen([seenTimestamp][, callback])
+
+This function will mark your entire inbox as seen (don't be confused with read!).
 
 ---------------------------------------
 
@@ -1425,12 +1457,12 @@ __Example__
 
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
 
-    api.listenMqtt((err, message) => {
+    api.listen((err, message) => {
         if(err) return console.error(err);
 
         // Mute all incoming chats for one minute
@@ -1504,6 +1536,7 @@ Various types of message can be sent:
 * *Mentions:* set field `mentions` to an array of objects. Objects should have the `tag` field set to the text that should be highlighted in the mention. The object should have an `id` field, where the `id` is the user id of the person being mentioned. The instance of `tag` that is highlighted is determined through indexOf, an optional `fromIndex`
 can be passed in to specify the start index to start searching for the `tag` text
 in `body` (default=0). (See below for an example.)
+* *Location:* set field `location` to an object with `latitude` and `longitude` fields. Optionally set field `current` of the `location` object to true to indicate the location is the user’s current location. Otherwise the location will be sent as a pinned location.
 
 Note that a message can only be a regular message (which can be empty) and optionally one of the following: a sticker, an attachment or a url.
 
@@ -1512,7 +1545,7 @@ __Tip__: to find your own ID, you can look inside the cookies. The `userID` is u
 __Example (Basic Message)__
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -1526,7 +1559,7 @@ login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, ap
 __Example (File upload)__
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
 login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
     if(err) return console.error(err);
@@ -1543,12 +1576,12 @@ login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, ap
 
 __Example (Mention)__
 ```js
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
 login({email: "EMAIL", password: "PASSWORD"}, (err, api) => {
     if(err) return console.error(err);
 
-    api.listenMqtt((err, message) => {
+    api.listen((err, message) => {
         if (message && message.body) {
             // Getting the actual sender name from ID involves calling
             // `api.getThreadInfo` and `api.getUserInfo`
@@ -1562,6 +1595,19 @@ login({email: "EMAIL", password: "PASSWORD"}, (err, api) => {
             }, message.threadID);
         }
     });
+});
+```
+
+__Example (Location)__
+```js
+const login = require("fca-unofficial");
+login({email: "EMAIL", password: "PASSWORD"}, (err, api) => {
+    if(err) return console.error(err);
+    var yourID = "000000000000000";
+    const msg = {
+    	location: { latitude: 48.858093, longitude: 2.294694, current: true },
+  	};
+    api.sendMessage(msg, yourID);
 });
 ```
 
@@ -1580,7 +1626,7 @@ __Arguments__
 ---------------------------------------
 
 <a name="setMessageReaction"></a>
-### api.setMessageReaction(reaction, messageID[, callback])
+### api.setMessageReaction(reaction, messageID[, callback[, forceCustomReaction]])
 
 Sets reaction on message
 
@@ -1588,7 +1634,8 @@ __Arguments__
 
 * `reaction`: A string containing either an emoji, an emoji in unicode, or an emoji shortcut (see list of supported emojis below). The string can be left empty ("") in order to remove a reaction.
 * `messageID`: A string representing the message ID.
-* `callback(err)` - A callback called when sending the reaction is done.
+* `callback(err)`: A callback called when sending the reaction is done.
+* `forceCustomReaction`: Forcing the use of an emoji for setting reaction **(WARNING: NOT TESTED, YOU SHOULD NOT USE THIS AT ALL, UNLESS YOU'RE TESTING A NEW EMOJI)**
 
 __Supported Emojis__
 
@@ -1601,6 +1648,8 @@ __Supported Emojis__
 |😠|`😠`|`\uD83D\uDE20`|`:angry:`|
 |👍|`👍`|`\uD83D\uDC4D`|`:like:`, `:thumbsup:`|
 |👎|`👎`|`\uD83D\uDC4E`|`:dislike:`, `:thumbsdown:`|
+|❤|`❤`|`\u2764`|`:heart:`|
+|💗|`💗`|`\uD83D\uDC97`|`:glowingheart:`|
 
 ---------------------------------------
 
@@ -1613,6 +1662,7 @@ __Arguments__
 
 * `options` - An object containing the new values for the options that you want
   to set.  If the value for an option is unspecified, it is unchanged. The following options are possible.
+    - `pauseLog`: (Default `false`) Set this to `true` if you want to pause the npmlog output.
     - `logLevel`: The desired logging level as determined by npmlog.  Choose
       from either `"silly"`, `"verbose"`, `"info"`, `"http"`, `"warn"`, `"error"`, or `"silent"`.
     - `selfListen`: (Default `false`) Set this to `true` if you want your api
@@ -1620,18 +1670,20 @@ __Arguments__
       caution, as it can result in loops (a simple echo bot will send messages
       forever).
     - `listenEvents`: (Default `false`) Will make [api.listen](#listen) also handle events (look at api.listen for more details).
-    - `pageID`: (Default empty) Makes [api.listen](#listen) only receive messages through the page specified by that ID. Also makes `sendMessage` and `sendSticker` send from the page.
+    - `pageID`: (Default empty) Makes [api.listen](#listen) only receive messages through the page specified by that ID. Also makes [api.sendMessage](#sendMessage) send from the page.
     - `updatePresence`: (Default `false`) Will make [api.listen](#listen) also return `presence` ([api.listen](#presence) for more details).
     - `forceLogin`: (Default `false`) Will automatically approve of any recent logins and continue with the login process.
     - `userAgent`: (Default `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/600.3.18 (KHTML, like Gecko) Version/8.0.3 Safari/600.3.18`) The desired simulated User Agent.
 	- `autoMarkDelivery`: (Default `true`) Will automatically mark new messages as delivered. See [api.markAsDelivered](#markAsDelivered).
 	- `autoMarkRead`: (Default `false`) Will automatically mark new messages as read/seen. See [api.markAsRead](#markAsRead).
+	- `proxy`: (Default empty) Set this to proxy server address to use proxy. Note: Only HTTP Proxies which support CONNECT method is supported.
+	- `online`: (Default `true`) Set account's online state.
 
 __Example__
 
 ```js
 const fs = require("fs");
-const login = require("@xaviabot/fca-unofficial");
+const login = require("fca-unofficial");
 
 // Simple echo bot. This will send messages forever.
 
@@ -1643,7 +1695,7 @@ login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, ap
         logLevel: "silent"
     });
 
-    api.listenMqtt((err, message) => {
+    api.listen((err, message) => {
         if(err) return console.error(err);
 
         // Ignore empty messages (photos etc.)

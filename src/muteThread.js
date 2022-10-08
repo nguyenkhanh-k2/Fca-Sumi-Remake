@@ -31,7 +31,9 @@ module.exports = function (defaultFuncs, api, ctx) {
       .then(utils.saveCookies(ctx.jar))
       .then(utils.parseAndCheckLogin(ctx, defaultFuncs))
       .then(function (resData) {
-        if (resData.error) throw resData;
+        if (resData.error) {
+          throw resData;
+        }
 
         return callback();
       })

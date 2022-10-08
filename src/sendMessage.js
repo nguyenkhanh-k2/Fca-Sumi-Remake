@@ -1,5 +1,10 @@
 "use strict";
 
+/**
+ * Được Fix Hay Làm Màu Bởi: @HarryWakazaki
+ * 21/4/2022
+*/
+
 var utils = require("../utils");
 var log = require("npmlog");
 var bluebird = require("bluebird");
@@ -43,7 +48,8 @@ module.exports = function (defaultFuncs, api, ctx) {
     // resolve all promises
     bluebird
       .all(uploads)
-      .then(resData => callback(null, resData))
+      .then(resData => callback(null, resData)
+      )
       .catch(function (err) {
         log.error("uploadAttachment", err);
         return callback(err);
@@ -124,27 +130,35 @@ module.exports = function (defaultFuncs, api, ctx) {
             } || p
           );
         }, null);
-
         return callback(null, messageInfo);
       })
       .catch(function (err) {
         log.error("sendMessage", err);
         if (utils.getType(err) == "Object" && err.error === "Not logged in.") ctx.loggedIn = false;
-        return callback(err);
+        return callback(err,null);
       });
-  }
+    }
 
   function send(form, threadID, messageAndOTID, callback, isGroup) {
-    // We're doing a query to this to check if the given id is the id of
-    // a user or of a group chat. The form will be different depending
-    // on that.
-    if (utils.getType(threadID) === "Array") sendContent(form, threadID, false, messageAndOTID, callback);
+//Full Fix sendMessage
+  if (utils.getType(threadID) === "Array") sendContent(form, threadID, false, messageAndOTID, callback);
     else {
-      if (utils.getType(isGroup) != "Boolean") sendContent(form, threadID, threadID.length <= 15, messageAndOTID, callback);
-      else sendContent(form, threadID, !isGroup, messageAndOTID, callback);
+      var THREADFIX = "ThreadID".replace("ThreadID",threadID); // i cũng đôn nâu
+        if (THREADFIX.length <= 15 || globalThis.Fca.isUser.includes(threadID)) sendContent(form, threadID, !isGroup, messageAndOTID, callback);
+        else if (THREADFIX.length >= 15 && THREADFIX.indexOf(1) != 0 || globalThis.Fca.isThread.includes(threadID)) sendContent(form, threadID, threadID.length === 15, messageAndOTID, callback);
+        else {
+          if (globalThis.Fca.Data.event.isGroup) {
+            sendContent(form, threadID, threadID.length === 15, messageAndOTID, callback);
+            globalThis.Fca.isThread.push(threadID);
+          } 
+          else {
+            sendContent(form, threadID, !isGroup, messageAndOTID, callback);
+            globalThis.Fca.isUser.push(threadID)
+        }
+      }
     }
   }
-
+  
   function handleUrl(msg, form, callback, cb) {
     if (msg.url) {
       form["shareable_attachment[share_type]"] = "100";
@@ -287,7 +301,7 @@ module.exports = function (defaultFuncs, api, ctx) {
       is_spoof_warning: false,
       source: "source:chat:web",
       "source_tags[0]": "source:chat",
-      body: msg.body ? msg.body.toString() : "",
+      body: msg.body ? msg.body.toString().replace("\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f\ufe0f",'   ') : "",
       html_body: false,
       ui_push_phase: "V3",
       status: "0",
@@ -300,7 +314,7 @@ module.exports = function (defaultFuncs, api, ctx) {
       signatureID: utils.getSignatureID(),
       replied_to_message_id: replyToMessage
     };
-
+  
     handleLocation(msg, form, callback, () =>
       handleSticker(msg, form, callback, () =>
         handleAttachment(msg, form, callback, () =>
@@ -314,6 +328,7 @@ module.exports = function (defaultFuncs, api, ctx) {
         )
       )
     );
+
     return returnPromise;
   };
 };

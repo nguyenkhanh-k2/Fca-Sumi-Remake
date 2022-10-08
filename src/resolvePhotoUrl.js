@@ -31,6 +31,7 @@ module.exports = function (defaultFuncs, api, ctx) {
         log.error("resolvePhotoUrl", err);
         return callback(err);
       });
+
     return returnPromise;
   };
 };

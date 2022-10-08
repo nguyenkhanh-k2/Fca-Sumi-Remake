@@ -37,6 +37,7 @@ module.exports = function (defaultFuncs, api, ctx) {
         log.error("unfriend", err);
         return callback(err);
       });
+
     return returnPromise;
   };
 };

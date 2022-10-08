@@ -1,74 +1,88 @@
 {
-  "name": "@sumibot/fca-unofficial",
-  "version": "1.0.0",
-  "description": "Facebook chat API that doesn't rely on XMPP.  Will NOT be deprecated April 30th 2015.",
-  "scripts": {
-    "test": "mocha",
-    "lint": "eslint **.js",
-    "prettier": "prettier utils.js src/* --write"
-  },
-  "publishConfig": {
-   "@sumibot:registry": "https://npm.pkg.github.com"
- }
-  "repository": {
-    "type": "git",
-    "url": "git:https://github.com/nguyenkhanh-k2/sumibot-fca-unofficial.git"
-  },
-  "keywords": [
-    "facebook",
-    "chat",
-    "api"
-  ],
-  "bugs": {
-    "url": "https://github.com/nguyenkhanh-k2/sumibot-fca-unofficial/issues"
-  },
-  "author": "Avery, David, Maude, Benjamin",
-  "license": "MIT",
-  "dependencies": {
-    "bluebird": "^2.11.0",
-    "cheerio": "^1.0.0-rc.12",
-    "https-proxy-agent": "^4.0.0",
-    "mqtt": "^3.0.0",
-    "npmlog": "^1.2.0",
-    "request": "^2.53.0",
-    "websocket-stream": "^5.5.0"
-  },
-  "engines": {
-    "node": ">=4.x"
-  },
-  "devDependencies": {
-    "eslint": "^4.19.1",
-    "mocha": "^7.0.1",
-    "prettier": "^1.11.1"
-  },
-  "eslintConfig": {
-    "env": {
-      "es6": true,
-      "node": true
+    "name": "fca-sumi-remake",
+    "version": "1.2.15",
+    "description": "Facebook Chat Api Được Remake Bới NDK Chống Get (available) Và Pay Acc (maybe?)",
+    "main": "index.js",
+    "scripts": {
+        "test": "mocha",
+        "lint": "./node_modules/.bin/eslint **.js",
+        "prettier": "prettier utils.js src/* --write"
     },
-    "extends": "eslint:recommended",
-    "parserOptions": {
-      "sourceType": "module"
+    "author": "Avery, David, Maude, Benjamin, KanzuWakazaki",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/nguyenkhanh-k2/Fca-Sumi-Remake/issues"
     },
-    "rules": {
-      "linebreak-style": [
-        "error",
-        "unix"
-      ],
-      "semi": [
-        "error",
-        "always"
-      ],
-      "no-unused-vars": [
-        1,
-        {
-          "argsIgnorePattern": "^_"
+    "homepage": "https://github.com/nguyenkhanh-k2/Fca-Sumi-Remake#readme",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/nguyenkhanh-k2/Fca-Sumi-Remake.git"
+    },
+    "dependencies": {
+        "aes-js": "latest",
+        "assert": "latest",
+        "bluebird": "latest",
+        "chalk": "4.1.2",
+        "cheerio": "latest",
+        "crypto": "latest",
+        "crypto-js": "latest",
+        "got": "^11.8.3",
+        "horizon-sp": "latest",
+        "https-proxy-agent": "latest",
+        "is-hexcolor": "^1.0.0",
+        "lodash": "",
+        "mqtt": "latest",
+        "node-superfetch": "",
+        "npmlog": "latest",
+        "os": "latest",
+        "path": "latest",
+        "pretty-ms": "7.0.1",
+        "request": "latest",
+        "websocket-stream": "latest",
+        "uuid-apikey": "latest",
+        "express": "latest",
+        "readline": "latest",
+        "totp-generator": "latest",
+        "synthetic-horizon-database": "latest"
+    },
+    "engines": {
+        "node": ">=14.x <16.x"
+    },
+    "devDependencies": {
+        "eslint": "latest",
+        "mocha": "latest",
+        "prettier": "^2.7.1"
+    },
+    "eslintConfig": {
+        "env": {
+            "es6": true,
+            "node": true
+        },
+        "extends": "eslint:recommended",
+        "parserOptions": {
+            "sourceType": "module"
+        },
+        "rules": {
+            "linebreak-style": [
+                "error",
+                "unix"
+            ],
+            "semi": [
+                "error",
+                "always"
+            ],
+            "no-unused-vars": [
+                1,
+                {
+                    "argsIgnorePattern": "^_"
+                }
+            ]
         }
-      ]
-    }
-  },
-  "main": "index.js",
-  "directories": {
-    "test": "test"
-  }
+    },
+    "keywords": [
+        "Fca horizon",
+        "fca-horizon-remake",
+        "horizon fca",
+        "horizon"
+    ]
 }

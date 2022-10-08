@@ -37,6 +37,7 @@ module.exports = function (defaultFuncs, api, ctx) {
           resData.payload.mercury_payload.threads.map(utils.formatThread)
         );
       });
+
     return returnPromise;
   };
 };

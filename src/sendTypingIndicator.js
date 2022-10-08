@@ -15,8 +15,9 @@ module.exports = function (defaultFuncs, api, ctx) {
     // Check if thread is a single person chat or a group chat
     // More info on this is in api.sendMessage
     if (utils.getType(isGroup) == "Boolean") {
-      if (!isGroup) form.to = threadID;
-
+      if (!isGroup) {
+        form.to = threadID;
+      }
       defaultFuncs
         .post("https://www.facebook.com/ajax/messaging/typ.php", ctx.jar, form)
         .then(utils.parseAndCheckLogin(ctx, defaultFuncs))
@@ -26,7 +27,9 @@ module.exports = function (defaultFuncs, api, ctx) {
         })
         .catch(function (err) {
           log.error("sendTypingIndicator", err);
-          if (utils.getType(err) == "Object" && err.error === "Not logged in") ctx.loggedIn = false;
+          if (utils.getType(err) == "Object" && err.error === "Not logged in") {
+            ctx.loggedIn = false;
+          }
           return callback(err);
         });
     }
@@ -52,7 +55,10 @@ module.exports = function (defaultFuncs, api, ctx) {
   }
 
   return function sendTypingIndicator(threadID, callback, isGroup) {
-    if (utils.getType(callback) !== "Function" && utils.getType(callback) !== "AsyncFunction") {
+    if (
+      utils.getType(callback) !== "Function" &&
+      utils.getType(callback) !== "AsyncFunction"
+    ) {
       if (callback) log.warn("sendTypingIndicator", "callback is not a function - ignoring.");
       callback = () => { };
     }
@@ -60,10 +66,14 @@ module.exports = function (defaultFuncs, api, ctx) {
     makeTypingIndicator(true, threadID, callback, isGroup);
 
     return function end(cb) {
-      if (utils.getType(cb) !== "Function" && utils.getType(cb) !== "AsyncFunction") {
+      if (
+        utils.getType(cb) !== "Function" &&
+        utils.getType(cb) !== "AsyncFunction"
+      ) {
         if (cb) log.warn("sendTypingIndicator", "callback is not a function - ignoring.");
         cb = () => { };
       }
+
       makeTypingIndicator(false, threadID, cb, isGroup);
     };
   };

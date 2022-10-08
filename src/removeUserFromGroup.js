@@ -19,6 +19,7 @@ module.exports = function (defaultFuncs, api, ctx) {
     if (!callback) {
       callback = function (err, data) {
         if (err) return rejectFunc(err);
+
         resolveFunc(data);
       };
     }
@@ -33,13 +34,16 @@ module.exports = function (defaultFuncs, api, ctx) {
       .then(utils.parseAndCheckLogin(ctx, defaultFuncs))
       .then(function (resData) {
         if (!resData) throw { error: "Remove from group failed." };
+
         if (resData.error) throw resData;
+
         return callback();
       })
       .catch(function (err) {
         log.error("removeUserFromGroup", err);
         return callback(err);
       });
+
     return returnPromise;
   };
 };

@@ -17,6 +17,7 @@ module.exports = function (defaultFuncs, api, ctx) {
       callback = form;
       form = {};
     }
+
     form = form || {};
 
     callback = callback || function (err, data) {

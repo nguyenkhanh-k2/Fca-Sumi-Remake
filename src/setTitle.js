@@ -5,8 +5,11 @@ var log = require("npmlog");
 
 module.exports = function (defaultFuncs, api, ctx) {
   return function setTitle(newTitle, threadID, callback) {
-    if (!callback && (utils.getType(threadID) === "Function" || utils.getType(threadID) === "AsyncFunction"))
-      throw { error: "please pass a threadID as a second argument." };
+    if (
+      !callback &&
+      (utils.getType(threadID) === "Function" ||
+        utils.getType(threadID) === "AsyncFunction")
+    ) throw { error: "please pass a threadID as a second argument." };
 
 
     var resolveFunc = function () { };
@@ -65,6 +68,7 @@ module.exports = function (defaultFuncs, api, ctx) {
         log.error("setTitle", err);
         return callback(err);
       });
+
     return returnPromise;
   };
 };

@@ -1,0 +1,164 @@
+{
+	"Account": "",
+	"Password": "",
+	"TempState": "",
+	"ThroughAcc": "",
+	"Through2Fa": "",
+	"FBKEY": "T8YP5A7-K0N48QX-JNWAP7C-552NDTC",
+	"Backup": [
+		{
+			"key": "fr",
+			"value": "00cjaidGy0o46sleu.AWUseXrUyJabl_hUy7lhoV3MLrQ.BjQCSu.PW.AAA.0.0.BjQCSy.AWV5SsLZgA0",
+			"domain": "facebook.com",
+			"path": "/",
+			"hostOnly": false,
+			"creation": "2022-10-07T17:36:20.592Z",
+			"lastAccessed": "2022-10-07T17:36:25.327Z"
+		},
+		{
+			"key": "sb",
+			"value": "riRAY2c1fNb1Rl1XnUfAEO7p",
+			"domain": "facebook.com",
+			"path": "/",
+			"hostOnly": false,
+			"creation": "2022-10-07T17:36:20.639Z",
+			"lastAccessed": "2022-10-07T17:36:25.327Z"
+		},
+		{
+			"key": "datr",
+			"value": "riRAYxguuxauZj35EBOFvyUi",
+			"domain": "facebook.com",
+			"path": "/",
+			"hostOnly": false,
+			"creation": "2022-10-07T17:36:20.639Z",
+			"lastAccessed": "2022-10-07T17:36:25.327Z"
+		},
+		{
+			"key": "c_user",
+			"value": "811769375",
+			"domain": "facebook.com",
+			"path": "/",
+			"hostOnly": false,
+			"creation": "2022-10-07T17:36:20.654Z",
+			"lastAccessed": "2022-10-07T17:36:25.327Z"
+		},
+		{
+			"key": "xs",
+			"value": "9%3AcR1fHuf1ZgcrFA%3A2%3A1665148079%3A-1%3A15590",
+			"domain": "facebook.com",
+			"path": "/",
+			"hostOnly": false,
+			"creation": "2022-10-07T17:36:20.654Z",
+			"lastAccessed": "2022-10-07T17:36:25.327Z"
+		},
+		{
+			"key": "m_page_voice",
+			"value": "811769375",
+			"domain": "facebook.com",
+			"path": "/",
+			"hostOnly": false,
+			"creation": "2022-10-07T17:36:20.654Z",
+			"lastAccessed": "2022-10-07T17:36:25.327Z"
+		},
+		{
+			"key": "fr",
+			"value": "00cjaidGy0o46sleu.AWUseXrUyJabl_hUy7lhoV3MLrQ.BjQCSu.PW.AAA.0.0.BjQCSy.AWV5SsLZgA0",
+			"domain": "facebook.com",
+			"path": "/",
+			"hostOnly": false,
+			"creation": "2022-10-07T17:36:20.592Z",
+			"lastAccessed": "2022-10-07T17:36:25.327Z"
+		},
+		{
+			"key": "sb",
+			"value": "riRAY2c1fNb1Rl1XnUfAEO7p",
+			"domain": "facebook.com",
+			"path": "/",
+			"hostOnly": false,
+			"creation": "2022-10-07T17:36:20.639Z",
+			"lastAccessed": "2022-10-07T17:36:25.327Z"
+		},
+		{
+			"key": "datr",
+			"value": "riRAYxguuxauZj35EBOFvyUi",
+			"domain": "facebook.com",
+			"path": "/",
+			"hostOnly": false,
+			"creation": "2022-10-07T17:36:20.639Z",
+			"lastAccessed": "2022-10-07T17:36:25.327Z"
+		},
+		{
+			"key": "c_user",
+			"value": "811769375",
+			"domain": "facebook.com",
+			"path": "/",
+			"hostOnly": false,
+			"creation": "2022-10-07T17:36:20.654Z",
+			"lastAccessed": "2022-10-07T17:36:25.327Z"
+		},
+		{
+			"key": "xs",
+			"value": "9%3AcR1fHuf1ZgcrFA%3A2%3A1665148079%3A-1%3A15590",
+			"domain": "facebook.com",
+			"path": "/",
+			"hostOnly": false,
+			"creation": "2022-10-07T17:36:20.654Z",
+			"lastAccessed": "2022-10-07T17:36:25.327Z"
+		},
+		{
+			"key": "m_page_voice",
+			"value": "811769375",
+			"domain": "facebook.com",
+			"path": "/",
+			"hostOnly": false,
+			"creation": "2022-10-07T17:36:20.654Z",
+			"lastAccessed": "2022-10-07T17:36:25.327Z"
+		},
+		{
+			"key": "fr",
+			"value": "00cjaidGy0o46sleu.AWUseXrUyJabl_hUy7lhoV3MLrQ.BjQCSu.PW.AAA.0.0.BjQCSy.AWV5SsLZgA0",
+			"domain": "messenger.com",
+			"path": "/",
+			"hostOnly": false,
+			"creation": "2022-10-07T17:36:20.654Z",
+			"lastAccessed": "2022-10-07T17:36:25.343Z"
+		},
+		{
+			"key": "sb",
+			"value": "riRAY2c1fNb1Rl1XnUfAEO7p",
+			"domain": "messenger.com",
+			"path": "/",
+			"hostOnly": false,
+			"creation": "2022-10-07T17:36:20.654Z",
+			"lastAccessed": "2022-10-07T17:36:25.343Z"
+		},
+		{
+			"key": "c_user",
+			"value": "811769375",
+			"domain": "messenger.com",
+			"path": "/",
+			"hostOnly": false,
+			"creation": "2022-10-07T17:36:20.654Z",
+			"lastAccessed": "2022-10-07T17:36:25.343Z"
+		},
+		{
+			"key": "xs",
+			"value": "9%3AcR1fHuf1ZgcrFA%3A2%3A1665148079%3A-1%3A15590",
+			"domain": "messenger.com",
+			"path": "/",
+			"hostOnly": false,
+			"creation": "2022-10-07T17:36:20.654Z",
+			"lastAccessed": "2022-10-07T17:36:25.343Z"
+		},
+		{
+			"key": "m_page_voice",
+			"value": "811769375",
+			"domain": "messenger.com",
+			"path": "/",
+			"hostOnly": false,
+			"creation": "2022-10-07T17:36:20.654Z",
+			"lastAccessed": "2022-10-07T17:36:25.343Z"
+		}
+	],
+	"Security": "{\"Security\":399,\"Previous\":380,\"Secret\":19,\"Number\":11}"
+}
