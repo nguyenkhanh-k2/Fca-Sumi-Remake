@@ -1,6 +1,6 @@
 {
     "name": "fca-sumi-remake",
-    "version": "1.3.7",
+    "version": "1.3.9",
     "description": "Facebook Chat Api Được Remake Bới NDK Chống Get (available) Và Pay Acc (maybe?)",
     "main": "index.js",
     "scripts": {

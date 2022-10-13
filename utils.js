@@ -908,13 +908,6 @@ function formatDeltaEvent(m) {
     var logMessageType;
     var logMessageData;
 
-    // log:thread-color => {theme_color}
-    // log:user-nickname => {participant_id, nickname}
-    // log:thread-icon => {thread_icon}
-    // log:thread-name => {name}
-    // log:subscribe => {addedParticipants - [Array]}
-    // log:unsubscribe => {leftParticipantFbId}
-
     switch (m.class) {
         case "AdminTextMessage":
             logMessageType = getAdminTextMessageType(m);

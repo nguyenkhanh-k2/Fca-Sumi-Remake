@@ -185,20 +185,13 @@ function listenMqtt(defaultFuncs, api, ctx, globalCallback) {
 
     });
 
-    process.on('SIGINT', function() {
-        LogUptime();
-        process.kill(process.pid);
-    });
-
-    process.on('exit', (code) => {
-        LogUptime();
-    });
-
+    LogUptime();
     mqttClient.on('close', function() {
-
+        LogUptime();
     });
 
     mqttClient.on('disconnect', function() {
+        LogUptime();
         process.exit(1);
     });
 }
