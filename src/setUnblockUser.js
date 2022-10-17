@@ -37,6 +37,8 @@
        variables: JSON.stringify({
          input: {
            actor_id: ctx.userID,
+           block_action: "UNBLOCK",
+           setting: "USER",
            target_id: userID,
            client_mutation_id: Math.round(Math.random() * 19).toString()
          },
@@ -54,7 +56,7 @@
          return callback(null, resData.data);
        })
        .catch(function(err) {
-         log.error("setPostReaction", err);
+         log.error("setUnblockUser", err);
          return callback(err);
        });
  
