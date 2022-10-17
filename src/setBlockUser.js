@@ -55,7 +55,7 @@
          return callback(null, resData.data);
        })
        .catch(function(err) {
-         log.error("setPostReaction", err);
+         log.error("setBlockUser", err);
          return callback(err);
        });
  
