@@ -1492,16 +1492,7 @@ function getAppState(jar, Encode) {
     switch (require("../../FastConfigFca.json").EncryptFeature) {
         case true:
             {
-                if (Encode == undefined) Encode = true;
-                if (process.env['FBKEY'] != undefined && Encode) {
-                    if (!global.Fca.Setting.get('getAppState')) {
-                        logger.Normal(Language.EncryptSuccess);
-                        data = Security(JSON.stringify(appstate), process.env['FBKEY'], "Encrypt");
-                        global.Fca.Setting.set('AppState', data);
-                    } else {
-                        data = global.Fca.Setting.get('AppState');
-                    }
-                } else return appstate;
+                 return appstate;
             }
             break;
         case false:
