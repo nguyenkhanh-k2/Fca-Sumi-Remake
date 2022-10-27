@@ -97,6 +97,7 @@ function formatThreadGraphQLResponse(data) {
         snippetAttachments: [],
         serverTimestamp: messageThread.updated_time_precise,
         imageSrc: messageThread.image ? messageThread.image.uri : null,
+        thread_theme: messageThread.thread_theme ? messageThread.thread_theme : null,
         isCanonicalUser: messageThread.is_canonical_neo_user,
         isCanonical: messageThread.thread_type != "GROUP",
         recipientsLoadable: true,
